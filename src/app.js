@@ -1,11 +1,15 @@
-const express=require('express');
-const app=express();
-const {auth}=require('./middlewares/auth');
-app.use('/admin',auth);
-app.get('/admin/add',(req,res)=>{
-    res.send('new user is added')
+const express = require('express');
+const app = express();
+
+app.get('/getUserData', (req, res) => {
+    throw new Error('nvnnvnv');
 });
-app.get('/admin/delete',(req,res)=>{
-    res.send('user is deleted');
-})
-app.listen(5700);
+
+app.use((err, req, res, next) => {
+    console.log("Error:", err.message);
+    res.status(500).send('something went wrong');//instead of werid ui it gives some good error handling
+});
+
+app.listen(5700, () => {
+    console.log("Server running");
+});
