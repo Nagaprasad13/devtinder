@@ -1,13 +1,11 @@
-const express =require('express');
+const express=require('express');
 const app=express();
-app.get("/",(req,res)=>{
-    res.send("Hello from te serer!");
+const {auth}=require('./middlewares/auth');
+app.use('/admin',auth);
+app.get('/admin/add',(req,res)=>{
+    res.send('new user is added')
 });
-///
-app.get("/test",(req,res)=>{
-    res.send("hello");
+app.get('/admin/delete',(req,res)=>{
+    res.send('user is deleted');
 })
-app.listen(3000,()=>{
-    console.log("Server is running in port 3000....")
-});
-
+app.listen(5700);
