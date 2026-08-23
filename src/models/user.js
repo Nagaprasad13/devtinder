@@ -1,18 +1,29 @@
 const mongoose=require('mongoose');
-//creating schema means creating a exo-Skeleton
-const userSchema=mongoose.Schema({
-    name:String,
-    age:Number,
-    UniqueSkill:[String],
-    level:Number,
-    attributes:[{
-        attack:Number,
-        defence:Number,
-        arcane:Number,
-        Strength:Number
-
-    }],
-
+const userScheme=new mongoose.Schema({
+    name:{
+        type:String,
+        required:true
+    },
+    emailId:{
+        type:String,
+        required:true,
+        unique:true,
+        lowercase:true,
+        trim:true
+    },
+    password:{
+        type:String,
+        required:true,
+        minlength:8,
+        maxlength:100,
+        //validatin the password
+        validate:{
+            validator:function(value){
+                return /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&]).{8,}$/.test(value);
+            },
+            message:"Password must contain uppercase,lowercase,number and special character."
+    }
+    }
 });
-const User=mongoose.model("users",userSchema);
-module.exports={User}
+const User=mongoose.model("users",userScheme);
+module.exports={User};

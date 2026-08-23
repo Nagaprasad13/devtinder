@@ -1,5 +1,5 @@
 const mongoose=require('mongoose');
 const connectDb= async ()=>{
-    await mongoose.connect('mongodb+srv://nagaprasad01303_db_user:Blackswordsman13@node.ogvj7mw.mongodb.net/Dev_Tinder')
-};
+    await mongoose.connect('mongodb+srv://nagaprasad01303_db_user:Blackswordsman13@node.ogvj7mw.mongodb.net/Dev_Tinder');
+}
 module.exports={connectDb};
