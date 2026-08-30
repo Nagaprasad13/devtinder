@@ -1,18 +1,16 @@
 const validator=require('validator');
-const userValidation=(req)=>{
-    const genders=["female","male","others"];
-    const {name,emailId,password,gender}=req.body;
-    if(!genders.includes(gender)){
-        throw new Error("Invalid Gender");
+const validation=(firstName,lastName,emailId,password)=>{
+    if(!firstName||!lastName||!emailId||!password){
+        throw new Error('Invalid Creentials');
     }
-    if(!name||!password||!gender||name.length<4||name.length>50){
-        throw new Error("Invalid Credentials");
+    if(firstName<4||firstName>50||lastName<2||lastName>50){
+        throw new Error('Ivalid Credentials');
     }
     if(!validator.isStrongPassword(password)){
-        throw new Error('Invalid Credentials');
+        throw new Error('InvailCredentials');
     }
     if(!validator.isEmail(emailId)){
-        throw new Error('Invalid Credentials');
+        throw new Error('Invalid Credentls');
     }
 }
-module.exports={userValidation};
+module.exports={validation};

@@ -1,44 +1,44 @@
 const mongoose=require('mongoose');
+const jwt=require('jsonwebtoken');
 const validator=require('validator');
-const userScheme=new mongoose.Schema({
-    name:{
+const bcrypt=require('bcrypt');
+const userSchema=new mongoose.Schema({
+    firstName:{
         type:String,
-        required:true
+        required:true,
+        minlength:4,
+        maxlength:50
+    },
+    lastName:{
+        type:String,
+        required:true,
+        minlength:2,
+        maxlength:50
     },
     emailId:{
         type:String,
         required:true,
-        unique:true,
-        lowercase:true,
-        trim:true,
-        validate(value){
+        validation(value){
             if(!validator.isEmail(value)){
-                throw new Error("Invalid email:"+value);
+                throw new Error("Invalid Credentials");
             }
         }
     },
     password:{
         type:String,
         required:true,
-        minlength:8,
-        maxlength:100,
-        //validatin the password
-        validate(value){
+        validation(value){
             if(!validator.isStrongPassword(value)){
-                throw new Error("Weak password:"+value)
+                throw new Error("Invalid Credentials");
             }
         }
-    },
-    gender:{
-        type:String,
-        required:true,
-    },
-    photoUrl:{
-        type:String,
-        default:"https://th.bing.com/th/id/OIP.iXSYbviP4gC2E0WkkOFdgAHaHa?w=191&h=191&c=7&r=0&o=7&dpr=1.5&pid=1.7&rm=3"
     }
-   
-}, {
-    timestamps:true});
-const User=mongoose.model("users",userScheme);
+});
+userSchema.methods.getJWT=function(){
+    return jwt.sign({userId:this._id},"devTinder@1303");//{}->is a plain object....
+};
+userSchema.methods.verifyPassword=function(userPassword){
+    return bcrypt.compare(userPassword,this.password);
+};
+const User=mongoose.model("Users",userSchema);
 module.exports={User};
