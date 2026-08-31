@@ -13,7 +13,7 @@ const userAuth=async (req,res,next)=>{
         next();
     }
     catch(err){
-        res.status(401).send('Unauthorized access');
+        res.status(401).send('Unauthorized access:'+err.message);
     }
 }
 module.exports={userAuth};

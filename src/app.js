@@ -14,8 +14,12 @@ connectDb().then(()=>{
 });
 app.use(express.json());
 app.use(cookieParser());
-const authRouter=require('./routes/auth');
-const requestRouter=require('./routes/request');
-const profileRouter=require('./routes/profile');
+const {authRouter}=require('./routes/auth');
+const {requestRouter}=require('./routes/request');
+const {profileRouter}=require('./routes/profile');
+app.use('/',authRouter);
+app.use('/',profileRouter);
+app.use('/',requestRouter);
+
 
 

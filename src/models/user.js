@@ -33,7 +33,7 @@ const userSchema=new mongoose.Schema({
             }
         }
     }
-});
+},{timestamps:true});
 userSchema.methods.getJWT=function(){
     return jwt.sign({userId:this._id},"devTinder@1303");//{}->is a plain object....
 };

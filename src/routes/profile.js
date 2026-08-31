@@ -9,12 +9,12 @@ profileRouter.get('/profile',userAuth,(req,res)=>{
 });
 profileRouter.patch("/profile",userAuth,async (req,res)=>
 {
-    try{
-        const updatedUser=await User.findByIdAndUpdate(req.usr._id,req.body,{new:true});
+    try{      
+        const updatedUser=await User.findByIdAndUpdate(req.user._id,req.body,{ returnDocument: "after" });//instead if new use return document 
         res.status(201).send(updatedUser);
     }
     catch(err){
-        res.status(401).send('falied to update');
+        res.status(401).send('falied to update '+err.message);
     }
 });
 module.exports={profileRouter};
