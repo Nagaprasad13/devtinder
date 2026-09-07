@@ -19,10 +19,9 @@
         $or: [
             { fromUserId, toUserId },
             { fromUserId: toUserId, toUserId: fromUserId }
-        ],
-        $or:[{status:"interested"},{status:"accepted"}]
+        ],status:{$in:["interested","accepted"]}
     });
-            if(exist){
+            if(exist.length>0){
                 throw new Error('Connection already exists');
             }
             const connection=new requestConnectionModel({fromUserId,toUserId,status});

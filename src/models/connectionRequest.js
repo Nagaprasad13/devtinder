@@ -1,11 +1,13 @@
-const mongoose=require('mongoose');
+const mongoose=require('mongoose');;
 const connectionRequestSchema=mongoose.Schema({
     fromUserId:{
         type:mongoose.Schema.Types.ObjectId,
+        ref:"users",
         required:true
     },
     toUserId:{
         type:mongoose.Schema.Types.ObjectId,
+        ref:"users",
         required:true,
     },
     status:{

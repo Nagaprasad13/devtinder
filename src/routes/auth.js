@@ -2,6 +2,7 @@ const express=require('express');
 const {User}=require('../models/user');
 const { validation } = require('../utils/validation');
 const bcrypt=require('bcrypt');
+const { userAuth } = require('../middlewares/auth');
 const authRouter=express.Router();
 authRouter.post('/signup',async(req,res)=>{
     try{
@@ -39,4 +40,13 @@ authRouter.post('/login',async(req,res)=>{
         res.status(401).json({message:err.message});
     }
 });
+authRouter.post('/logout',userAuth,async(req,res)=>{
+    try{
+        res.clearCookie("token");
+        res.status(200).send({message:"Sucessfully logged out"});
+    }
+    catch(err){
+        res.status(400).send({message:"Error during logout"});
+    }
+})
 module.exports={authRouter};
