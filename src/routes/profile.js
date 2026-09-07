@@ -1,20 +1,36 @@
-const {User}=require('../models/user');
 const express=require('express');
-const { userAuth } = require('../middlewares/auth');
+const {User}=require('../models/user');
 const profileRouter=express.Router();
-profileRouter.get('/profile',userAuth,(req,res)=>{
-    const user=req.user;
-    console.log('connection to user');
-    res.status(201).send(user);
-});
-profileRouter.patch("/profile",userAuth,async (req,res)=>
-{
-    try{      
-        const updatedUser=await User.findByIdAndUpdate(req.user._id,req.body,{ returnDocument: "after" });//instead if new use return document 
-        res.status(201).send(updatedUser);
+const {userAuth}=require("../middlewares/auth");
+profileRouter.get('/profile',userAuth,async(req,res)=>{
+    try{
+        res.status(201).json(req.user);
     }
     catch(err){
-        res.status(401).send('falied to update '+err.message);
+        res.status(401).send('Unable to get the user data');
+    }
+});
+profileRouter.patch('/profile/edit',userAuth,async(req,res)=>{
+    try{
+        const allowedfields=["firstName","lastName"];
+        const updates={};
+        for(let field of allowedfields){
+            if(req.body[field]!==undefined){
+                updates[field]=req.body[field]
+            }
+        }
+        if(Object.keys(updates).length===0){
+            throw new Error('Allowed fields can be changed');
+        }
+        const userId=req.user._id;
+        const updated=await User.findByIdAndUpdate(userId,updates,{returnDocument:"after"});
+        if(!updated){
+            throw new Error('User not found');
+        }
+        res.status(200).send({message:"User Updated",updated})
+;    }
+    catch(err){
+        res.status(401).send("error"+err.message);
     }
 });
 module.exports={profileRouter};

@@ -1,27 +1,32 @@
-    const express=require('express');
-    const mongoose=require('mongoose');
-    const connectionRequestSchema=new mongoose.Schema({
-        fromUserId:{
-            type:mongoose.Schema.Types.ObjectId,
-            required:true,
-            ref:"User"
-        },
-        toUserId:{
-            type:mongoose.Schema.Types.ObjectId,
-            required:true,
-            ref:"User"
-        },
-        status:{
-            type:String,
-            enum:{
-                values:["ignored","accepted","rejected","interested"],
-                message:'{VALUE} is a incorrect Status Type'
-            },
-            required:true
+const mongoose=require('mongoose');
+const connectionRequestSchema=mongoose.Schema({
+    fromUserId:{
+        type:mongoose.Schema.Types.ObjectId,
+        required:true
+    },
+    toUserId:{
+        type:mongoose.Schema.Types.ObjectId,
+        required:true,
+    },
+    status:{
+        type:String,
+        required:true,
+        enum:{
+            values:["accepted","rejected","ignored","interested"],
+            message:"{VALUE} is not correct"
         }
-
-    },{
-        timestamps:true
-    });
-    const connectionRequestModel=mongoose.model("connectionRequests",connectionRequestSchema);
-    module.exports={connectionRequestModel};
+    }
+},{timestamps:true});
+connectionRequestSchema.pre('save',function(next){
+    if(this.fromUserId.equals(this.toUserId)){
+        throw new Error("connection is invalid");
+    }
+});
+connectionRequestSchema.index({
+   fromUserId:1,toUserId:1
+})
+connectionRequestSchema.index({
+    toUserId:1,fromUserId:1
+});
+const requestConnectionModel=mongoose.model("connectionrequests",connectionRequestSchema);
+module.exports={requestConnectionModel};

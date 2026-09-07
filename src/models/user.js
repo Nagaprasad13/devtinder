@@ -1,8 +1,9 @@
-const mongoose=require('mongoose');
 const jwt=require('jsonwebtoken');
+const mongoose=require('mongoose');
 const validator=require('validator');
 const bcrypt=require('bcrypt');
-const userSchema=new mongoose.Schema({
+const skillSchema=mongoose.Schema({name:String});
+const userSchema=mongoose.Schema({
     firstName:{
         type:String,
         required:true,
@@ -13,32 +14,36 @@ const userSchema=new mongoose.Schema({
         type:String,
         required:true,
         minlength:2,
-        maxlength:50
+        maxlength:40
     },
     emailId:{
         type:String,
         required:true,
-        validation(value){
+        validate(value){
             if(!validator.isEmail(value)){
                 throw new Error("Invalid Credentials");
             }
-        }
+        },
+        unique:true
     },
     password:{
         type:String,
         required:true,
-        validation(value){
+        validate(value){
             if(!validator.isStrongPassword(value)){
-                throw new Error("Invalid Credentials");
+                throw new Error('Invalid Credentials');
             }
         }
+    },
+    skills:{
+        type:Array,
     }
 },{timestamps:true});
 userSchema.methods.getJWT=function(){
-    return jwt.sign({userId:this._id},"devTinder@1303");//{}->is a plain object....
+    return jwt.sign({userId:this._id},"devTinder@1303");
 };
-userSchema.methods.verifyPassword=function(userPassword){
-    return bcrypt.compare(userPassword,this.password);
-};
-const User=mongoose.model("Users",userSchema);
+userSchema.methods.verifypass=async function(value){
+    return await bcrypt.compare(value,this.password);
+}
+const User=mongoose.model("users",userSchema);
 module.exports={User};
