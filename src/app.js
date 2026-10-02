@@ -1,4 +1,5 @@
 const express=require('express');
+const cors=require('cors');
 const {connectDb}=require('./config/database');
 const cookiePaser=require('cookie-parser');
 const { authRouter } = require('./routes/auth');
@@ -12,6 +13,12 @@ connectDb().then(()=>{
 }).catch((err)=>{
     console.log(err);
 });
+app.use(cors(
+    {
+        origin:"http://localhost:5173",
+        credentials:true
+    }
+));
 app.use(express.json());
 app.use(cookiePaser());
 app.use('/',authRouter);
