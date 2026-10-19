@@ -37,6 +37,10 @@ const userSchema=mongoose.Schema({
     },
     skills:{
         type:Array,
+    },
+    img:{
+        type:String,
+        default:""
     }
 },{timestamps:true});
 userSchema.methods.getJWT=function(){

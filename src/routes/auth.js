@@ -41,13 +41,15 @@ authRouter.post('/login',async(req,res)=>{
         res.status(401).json({message:err.message});
     }
 });
-authRouter.post('/logout',userAuth,async(req,res)=>{
+authRouter.post('/logout',async(req,res)=>{
     try{
-        res.clearCookie("token");
+        res.clearCookie("token",{
+            path:'/'
+        });
         res.status(200).send({message:"Sucessfully logged out"});
     }
     catch(err){
         res.status(400).send({message:"Error during logout"});
     }
 })
-module.exports={authRouter};
+module.exports={authRouter};    
